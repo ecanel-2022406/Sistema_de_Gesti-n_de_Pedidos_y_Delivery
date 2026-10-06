@@ -70,4 +70,27 @@ public class PedidoService {
 
         return pedidoRepository.save(pedido);
     }
+
+    public List<Pedido> obtenerTodosLosPedidos() {
+        return pedidoRepository.findAll();
+    }
+
+    public Pedido obtenerPedidoPorId(Long id) {
+        return pedidoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Pedido no encontrado con ID: " + id));
+    }
+
+    @Transactional
+    public Pedido actualizarEstadoPedido(Long id, EstadoPedido nuevoEstado) {
+        Pedido pedido = obtenerPedidoPorId(id);
+        pedido.setEstado(nuevoEstado);
+        return pedidoRepository.save(pedido);
+    }
+
+    @Transactional
+    public void cancelarPedido(Long id) {
+        Pedido pedido = obtenerPedidoPorId(id);
+        pedido.setEstado(EstadoPedido.CANCELADO);
+        pedidoRepository.save(pedido);
+    }
 }
