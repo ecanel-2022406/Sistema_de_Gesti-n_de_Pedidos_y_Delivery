@@ -14,7 +14,6 @@ public class UsuarioService {
     private UsuarioRepository usuarioRepository;
 
     public Usuario registrarUsuario(Usuario usuario) {
-        // Puedes agregar lógica extra aquí (como encriptar contraseña si usas BCrypt)
         return usuarioRepository.save(usuario);
     }
 

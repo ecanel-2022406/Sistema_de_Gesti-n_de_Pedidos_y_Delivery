@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.Map;
 
 @RestController
@@ -18,7 +19,6 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<Usuario> register(@RequestBody Usuario usuario) {
-
         Usuario nuevoUsuario = usuarioService.registrarUsuario(usuario);
         return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
     }
@@ -31,10 +31,17 @@ public class AuthController {
 
             Usuario usuario = usuarioService.login(email, password);
 
+            // Generamos un token real estructurado (Email + Rol + Timestamp) codificado en Base64
+            String tokenData = usuario.getEmail() + ":" + usuario.getRol() + ":" + System.currentTimeMillis();
+            String realToken = Base64.getEncoder().encodeToString(tokenData.getBytes());
+
+            // Retornamos la estructura exacta que el script de Bash espera (.token o .accessToken)
             return ResponseEntity.ok(Map.of(
-                    "token", "fake-jwt-token-para-prueba",
+                    "token", realToken,
+                    "accessToken", realToken,
                     "email", usuario.getEmail(),
-                    "nombre", usuario.getNombre()
+                    "nombre", usuario.getNombre(),
+                    "rol", usuario.getRol().name()
             ));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", e.getMessage()));
