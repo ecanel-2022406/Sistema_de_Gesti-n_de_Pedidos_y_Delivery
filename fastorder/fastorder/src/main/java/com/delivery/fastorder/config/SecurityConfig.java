@@ -14,19 +14,8 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-
-                        .requestMatchers("/api/auth/**").permitAll()
-
-                        .requestMatchers(HttpMethod.POST, "/api/productos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/productos/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/productos/**").hasRole("ADMIN")
-
-                        .requestMatchers("/api/pedidos/**").hasRole("CLIENTE")
-
-                        .anyRequest().authenticated()
-                )
-                .httpBasic(spec -> {}); // <-- ¡Adiós a Customizing! Cero errores y funciona perfecto.
-
+                        .anyRequest().permitAll() // Permite todas las peticiones sin autenticación temporalmente
+                );
         return http.build();
     }
 
