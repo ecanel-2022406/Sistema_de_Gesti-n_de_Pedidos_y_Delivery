@@ -31,11 +31,9 @@ public class AuthController {
 
             Usuario usuario = usuarioService.login(email, password);
 
-            // Generamos un token real estructurado (Email + Rol + Timestamp) codificado en Base64
             String tokenData = usuario.getEmail() + ":" + usuario.getRol() + ":" + System.currentTimeMillis();
             String realToken = Base64.getEncoder().encodeToString(tokenData.getBytes());
 
-            // Retornamos la estructura exacta que el script de Bash espera (.token o .accessToken)
             return ResponseEntity.ok(Map.of(
                     "token", realToken,
                     "accessToken", realToken,
